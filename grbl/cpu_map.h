@@ -257,4 +257,170 @@
 #endif
 */
 
+#ifdef CPU_MAP_X_CARVE_PRO // Uses ATMEGA2560 (Arduino Mega processor)
+
+  // Define serial port pins and interrupt vectors.
+  #define SERIAL_RX     USART0_RX_vect
+  #define SERIAL_UDRE   USART0_UDRE_vect
+
+  // Define step pulse output pins. NOTE: All step bit pins must be on the same port.
+  #define STEP_DDR        DDRA
+  #define STEP_PORT       PORTA
+  #define X_STEP_BIT      4
+  #define Y_STEP_BIT      5
+  #define Z_STEP_BIT      7
+  #define STEP_MASK       ((1<<X_STEP_BIT)|(1<<Y_STEP_BIT)|(1<<Z_STEP_BIT)) // All step bits
+
+  // Define step direction output pins. NOTE: All direction pins must be on the same port.
+  #define DIRECTION_DDR     DDRA
+  #define DIRECTION_PORT    PORTA
+  #define X_DIRECTION_BIT   0
+  #define Y_DIRECTION_BIT   1
+  #define Z_DIRECTION_BIT   3
+  #define DIRECTION_MASK    ((1<<X_DIRECTION_BIT)|(1<<Y_DIRECTION_BIT)|(1<<Z_DIRECTION_BIT)) // All direction bits
+
+  // NOTE: Step pulse and direction pins may be on any port and output pin.
+  #define STEP_DDR_DUAL       DDRA
+  #define STEP_PORT_DUAL      PORTA
+  #define DUAL_STEP_BIT       6
+  #define STEP_MASK_DUAL      ((1<<DUAL_STEP_BIT))
+  #define DIRECTION_DDR_DUAL  DDRA
+  #define DIRECTION_PORT_DUAL PORTA
+  #define DUAL_DIRECTION_BIT  2
+  #define DIRECTION_MASK_DUAL ((1<<DUAL_DIRECTION_BIT))
+
+  // Define stepper driver enable/disable output pin.
+  #define STEPPERS_DISABLE_DDR    DDRL
+  #define STEPPERS_DISABLE_PORT   PORTL
+  #define STEPPERS_DISABLE_BIT    0
+  #define STEPPERS_DISABLE_MASK   (1<<STEPPERS_DISABLE_BIT)
+
+  // Define homing/hard limit switch input pins and limit interrupt vectors.
+  // NOTE: All limit bit pins must be on the same port, but not on a port with other input pins (CONTROL).
+  #define LIMIT_DDR        DDRB
+  #define LIMIT_PIN        PINB
+  #define LIMIT_PORT       PORTB
+  #define X_LIMIT_BIT      4
+  #define Y_LIMIT_BIT      5
+  #define Z_LIMIT_BIT      7
+  #define LIMIT_INT        PCIE0  // Pin change interrupt enable pin
+  #define LIMIT_INT_vect   PCINT0_vect
+  #define LIMIT_PCMSK      PCMSK0 // Pin change interrupt register
+
+  // NOTE: Dual axis limit is shared with the z-axis limit pin by default. Pin used must be on the same port
+  // as other limit pins.
+  #define DUAL_LIMIT_BIT    6
+  #define LIMIT_MASK        ((1<<X_LIMIT_BIT)|(1<<Y_LIMIT_BIT)|(1<<Z_LIMIT_BIT)|(1<<DUAL_LIMIT_BIT))
+
+  // Define user-control controls (cycle start, reset, feed hold) input pins.
+  // NOTE: All CONTROLs pins must be on the same port and not on a port with other input pins (limits).
+  #define CONTROL_DDR               DDRJ
+  #define CONTROL_PIN               PINJ
+  #define CONTROL_PORT              PORTJ
+  #define CONTROL_RESET_BIT         0
+  #define CONTROL_FEED_HOLD_BIT     1
+  #define CONTROL_CYCLE_START_BIT   2
+  #define CONTROL_SAFETY_DOOR_BIT   3  // NOTE: Safety door is shared with feed hold. Enabled by config define.
+  #define CONTROL_INT               PCIE1  // Pin change interrupt enable pin
+  #define CONTROL_INT_vect          PCINT1_vect
+  #define CONTROL_PCMSK             PCMSK1 // Pin change interrupt register
+  #define CONTROL_MASK              ((1<<(CONTROL_RESET_BIT+1))|(1<<(CONTROL_FEED_HOLD_BIT+1))|(1<<(CONTROL_CYCLE_START_BIT+1))|(1<<(CONTROL_SAFETY_DOOR_BIT+1)))
+  #define CONTROL_INVERT_MASK       CONTROL_MASK // May be re-defined to only invert certain control pins.
+
+  // Define probe switch input pin.
+  #define PROBE_DDR       DDRJ
+  #define PROBE_PIN       PINJ
+  #define PROBE_PORT      PORTJ
+  #define PROBE_BIT       4
+  #define PROBE_MASK      (1<<PROBE_BIT)
+
+  // Define spindle enable and spindle direction output pins.
+  #define SPINDLE_ENABLE_DDR      DDRD
+  #define SPINDLE_ENABLE_PORT     PORTD
+  #define SPINDLE_ENABLE_BIT      3
+  #define SPINDLE_DIRECTION_DDR   DDRD
+  #define SPINDLE_DIRECTION_PORT  PORTD
+  #define SPINDLE_DIRECTION_BIT   4
+
+  // Variable spindle configuration below. Do not change unless you know what you are doing.
+  // NOTE: Only used when variable spindle is enabled.
+  #define SPINDLE_PWM_MAX_VALUE     255 // Don't change. Does fast PWM mode fix top value as 255?
+  #ifndef SPINDLE_PWM_MIN_VALUE
+    #define SPINDLE_PWM_MIN_VALUE   1   // Must be greater than zero.
+  #endif
+  #define SPINDLE_PWM_OFF_VALUE     0
+  #define SPINDLE_PWM_RANGE         (SPINDLE_PWM_MAX_VALUE-SPINDLE_PWM_MIN_VALUE)
+  #define SPINDLE_TCCRA_REGISTER    TCCR2A
+  #define SPINDLE_TCCRB_REGISTER    TCCR2B
+  #define SPINDLE_OCR_REGISTER      OCR2B
+  #define SPINDLE_COMB_BIT          COM2B1
+  #define SPINDLE_TCCRA_INIT_MASK   ((1<<WGM20) | (1<<WGM21))   // Configures fast PWM mode.
+  #define SPINDLE_TCCRB_INIT_MASK   (1<<CS21)   // 1/8 prescalar
+  #define SPINDLE_PWM_DDR           DDRH
+  #define SPINDLE_PWM_PORT          PORTH
+  #define SPINDLE_PWM_BIT           6
+
+  // Define flood and mist coolant enable output pins.
+  #define COOLANT_FLOOD_DDR   DDRD
+  #define COOLANT_FLOOD_PORT  PORTD
+  #define COOLANT_FLOOD_BIT   5
+  #define COOLANT_MIST_DDR    DDRD
+  #define COOLANT_MIST_PORT   PORTD
+  #define COOLANT_MIST_BIT    6
+
+  // Define the SPI pins
+  #define PORT_SPI    PORTB
+  #define DDR_SPI     DDRB
+  #define DD_MISO     3
+  #define DD_MOSI     2
+  #define DD_SCK      1
+  #define DD_SS       0
+
+  // Define the SPI chip select pins for the stepper motor drivers
+  #define CS_DDR        DDRC
+  #define CS_PORT       PORTC
+  #define CS_PIN        PINC
+  #define CS_X_BIT      0
+  #define CS_Y_BIT      1
+  #define CS_DUAL_BIT   2
+  #define CS_Z_BIT      3
+  #define CS_MASK       ((1<<CS_X_BIT) | (1<<CS_Y_BIT) | (1<<CS_DUAL_BIT) | (1<<CS_Z_BIT))
+
+  // Define the reset pins for the stepper motor drivers
+  #define RESET_DDR       DDRF
+  #define RESET_PORT      PORTF
+  #define RESET_X_BIT     4
+  #define RESET_Y_BIT     5
+  #define RESET_DUAL_BIT  6
+  #define RESET_Z_BIT     7
+  #define RESET_MASK      ((1<<RESET_X_BIT) | (1<<RESET_Y_BIT) | (1<<RESET_DUAL_BIT) | (1<<RESET_Z_BIT))
+
+  // Define the fault pins for the stepper motor drivers (open drain, need internal pull-up enabled)
+  #define FAULT_DDR       DDRK
+  #define FAULT_PORT      PORTK
+  #define FAULT_PIN       PINK
+  #define FAULT_X_BIT     0
+  #define FAULT_Y_BIT     1
+  #define FAULT_DUAL_BIT  2
+  #define FAULT_Z_BIT     3
+  #define FAULT_MASK      ((1<<FAULT_X_BIT) | (1<<FAULT_Y_BIT) | (1<<FAULT_DUAL_BIT) | (1<<FAULT_Z_BIT))
+  #define FAULT_INT       PCIE2
+  #define FAULT_INT_vect  PCINT2_vect
+  #define FAULT_PCMASK    PCMSK2
+
+  // Define the stall detect pins for the stepper motor drivers (open drain, need internal pull-up enabled)
+  #define STALL_DDR       DDRK
+  #define STALL_PORT      PORTK
+  #define STALL_PIN       PINK
+  #define STALL_X_BIT     4
+  #define STALL_Y_BIT     5
+  #define STALL_DUAL_BIT  6
+  #define STALL_Z_BIT     7
+  #define STALL_MASK      ((1<<STALL_X_BIT) | (1<<STALL_Y_BIT) | (1<<STALL_DUAL_BIT) | (1<<STALL_Z_BIT))
+  #define STALL_INT       PCIE2
+  #define STALL_INT_vect  PCINT2_vect
+  #define STALL_PCMASK    PCMSK2
+
+#endif
+
 #endif

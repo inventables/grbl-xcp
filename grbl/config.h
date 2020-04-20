@@ -166,7 +166,7 @@
 // Enables a second coolant control pin via the mist coolant g-code command M7 on the Arduino Uno
 // analog pin 4. Only use this option if you require a second coolant control pin.
 // NOTE: The M8 flood coolant control pin on analog pin 3 will still be functional regardless.
-// #define ENABLE_M7 // Disabled by default. Uncomment to enable.
+#define ENABLE_M7 // Disabled by default. Uncomment to enable.
 
 // This option causes the feed hold input to act as a safety door switch. A safety door, when triggered,
 // immediately forces a feed hold and then safely de-energizes the machine. Resuming is blocked until
@@ -561,7 +561,7 @@
 // NOTE: Still a work-in-progress. Machine coordinates must be in all negative space and
 // does not work with HOMING_FORCE_SET_ORIGIN enabled. Parking motion also moves only in
 // positive direction.
-// #define PARKING_ENABLE  // Default disabled. Uncomment to enable
+#define PARKING_ENABLE  // Default disabled. Uncomment to enable
 
 // Configure options for the parking motion, if enabled.
 #define PARKING_AXIS Z_AXIS // Define which axis that performs the parking motion
@@ -638,10 +638,19 @@
 // run out of flash to fit on an Arduino 328p/Uno. Only X and Y axes are supported. Variable
 // spindle/laser mode IS supported, but only for one config option. Core XY, spindle direction
 // pin, and M7 mist coolant are disabled/not supported.
-// #define ENABLE_DUAL_AXIS	// Default disabled. Uncomment to enable.
+#ifdef X_CARVE_PRO
+  #define ENABLE_DUAL_AXIS
+#else
+  // #define ENABLE_DUAL_AXIS	// Default disabled. Uncomment to enable.
+#endif
 
 // Select the one axis to mirror another motor. Only X and Y axis is supported at this time.
-#define DUAL_AXIS_SELECT  X_AXIS  // Must be either X_AXIS or Y_AXIS
+#ifdef X_CARVE_PRO
+  #define DUAL_AXIS_SELECT  Y_AXIS  // Must be Y_AXIS, do not change.
+#else
+  #define DUAL_AXIS_SELECT  X_AXIS  // Must be either X_AXIS or Y_AXIS
+  // #define DUAL_AXIS_SELECT  Y_AXIS
+#endif
 
 // To prevent the homing cycle from racking the dual axis, when one limit triggers before the
 // other due to switch failure or noise, the homing cycle will automatically abort if the second 
@@ -659,7 +668,7 @@
 // NOTE: Protoneer CNC Shield v3.51 has A.STP and A.DIR wired to pins A4 and A3 respectively.
 // The variable spindle (i.e. laser mode) build option works and may be enabled or disabled.
 // Coolant pin A3 is moved to D13, replacing spindle direction.
-#define DUAL_AXIS_CONFIG_PROTONEER_V3_51    // Uncomment to select. Comment other configs.
+// #define DUAL_AXIS_CONFIG_PROTONEER_V3_51    // Uncomment to select. Comment other configs.
 
 // NOTE: Arduino CNC Shield Clone (Originally Protoneer v3.0) has A.STP and A.DIR wired to 
 // D12 and D13, respectively. With the limit pins and stepper enable pin on this same port,

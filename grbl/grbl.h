@@ -23,7 +23,9 @@
 
 // Grbl versioning system
 #define GRBL_VERSION "1.1h"
-#define GRBL_VERSION_BUILD "20200415-XCP"
+#define GRBL_VERSION_BUILD "20200419-XCP"
+
+#define X_CARVE_PRO
 
 // Define standard libraries used by Grbl.
 #include <avr/io.h>
@@ -118,11 +120,13 @@
   #if defined(DUAL_AXIS_CONFIG_CNC_SHIELD_CLONE) && defined(VARIABLE_SPINDLE)
     #error "VARIABLE_SPINDLE not supported with DUAL_AXIS_CNC_SHIELD_CLONE."
   #endif
-  #if defined(DUAL_AXIS_CONFIG_CNC_SHIELD_CLONE) && defined(DUAL_AXIS_CONFIG_PROTONEER_V3_51)
-    #error "More than one dual axis configuration found. Select one."
-  #endif
-  #if !defined(DUAL_AXIS_CONFIG_CNC_SHIELD_CLONE) && !defined(DUAL_AXIS_CONFIG_PROTONEER_V3_51)
-    #error "No supported dual axis configuration found. Select one."
+  #ifndef X_CARVE_PRO
+    #if defined(DUAL_AXIS_CONFIG_CNC_SHIELD_CLONE) && defined(DUAL_AXIS_CONFIG_PROTONEER_V3_51)
+      #error "More than one dual axis configuration found. Select one."
+    #endif
+    #if !defined(DUAL_AXIS_CONFIG_CNC_SHIELD_CLONE) && !defined(DUAL_AXIS_CONFIG_PROTONEER_V3_51)
+      #error "No supported dual axis configuration found. Select one."
+    #endif
   #endif
   #if defined(COREXY)
     #error "CORE XY not supported with dual axis feature."
@@ -130,8 +134,10 @@
   #if defined(USE_SPINDLE_DIR_AS_ENABLE_PIN)
     #error "USE_SPINDLE_DIR_AS_ENABLE_PIN not supported with dual axis feature."
   #endif
-  #if defined(ENABLE_M7)
-    #error "ENABLE_M7 not supported with dual axis feature."
+  #ifndef X_CARVE_PRO
+    #if defined(ENABLE_M7)
+      #error "ENABLE_M7 not supported with dual axis feature."
+    #endif
   #endif
 #endif
 

@@ -289,12 +289,6 @@
   #define DUAL_DIRECTION_BIT  2
   #define DIRECTION_MASK_DUAL ((1<<DUAL_DIRECTION_BIT))
 
-  // Define stepper driver enable/disable output pin.
-  #define STEPPERS_DISABLE_DDR    DDRL
-  #define STEPPERS_DISABLE_PORT   PORTL
-  #define STEPPERS_DISABLE_BIT    0
-  #define STEPPERS_DISABLE_MASK   (1<<STEPPERS_DISABLE_BIT)
-
   // Define homing/hard limit switch input pins and limit interrupt vectors.
   // NOTE: All limit bit pins must be on the same port, but not on a port with other input pins (CONTROL).
   #define LIMIT_DDR        DDRB

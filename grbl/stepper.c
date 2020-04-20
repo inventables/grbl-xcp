@@ -224,8 +224,12 @@ static st_prep_t prep;
 void st_wake_up()
 {
   // Enable stepper drivers.
-  if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { STEPPERS_DISABLE_PORT |= (1<<STEPPERS_DISABLE_BIT); }
-  else { STEPPERS_DISABLE_PORT &= ~(1<<STEPPERS_DISABLE_BIT); }
+  #ifdef X_CARVE_PRO
+    enableSteppers();
+  #else
+    if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { STEPPERS_DISABLE_PORT |= (1<<STEPPERS_DISABLE_BIT); }
+    else { STEPPERS_DISABLE_PORT &= ~(1<<STEPPERS_DISABLE_BIT); }
+  #endif
 
   // Initialize stepper output bits to ensure first ISR call does not step.
   st.step_outbits = step_port_invert_mask;
@@ -263,8 +267,12 @@ void st_go_idle()
     pin_state = true; // Override. Disable steppers.
   }
   if (bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE)) { pin_state = !pin_state; } // Apply pin invert.
-  if (pin_state) { STEPPERS_DISABLE_PORT |= (1<<STEPPERS_DISABLE_BIT); }
-  else { STEPPERS_DISABLE_PORT &= ~(1<<STEPPERS_DISABLE_BIT); }
+  #ifdef X_CARVE_PRO
+    if(pin_state) { disableSteppers(); }
+  #else
+    if (pin_state) { STEPPERS_DISABLE_PORT |= (1<<STEPPERS_DISABLE_BIT); }
+    else { STEPPERS_DISABLE_PORT &= ~(1<<STEPPERS_DISABLE_BIT); }
+  #endif
 }
 
 
@@ -567,7 +575,9 @@ void stepper_init()
 {
   // Configure step and direction interface pins
   STEP_DDR |= STEP_MASK;
-  STEPPERS_DISABLE_DDR |= 1<<STEPPERS_DISABLE_BIT;
+  #ifndef X_CARVE_PRO
+    STEPPERS_DISABLE_DDR |= 1<<STEPPERS_DISABLE_BIT;
+  #endif
   DIRECTION_DDR |= DIRECTION_MASK;
   
   #ifdef ENABLE_DUAL_AXIS

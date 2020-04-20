@@ -41,6 +41,9 @@ int main(void)
   // Initialize system upon power-up.
   serial_init();   // Setup serial baud rate and interrupts
   settings_init(); // Load Grbl settings from EEPROM
+  #ifdef X_CARVE_PRO
+    drv8711_init();
+  #endif
   stepper_init();  // Configure stepper pins and interrupt timers
   system_init();   // Configure pinout pins and pin-change interrupt
 

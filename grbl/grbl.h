@@ -48,6 +48,9 @@
 #include "defaults.h"
 #include "cpu_map.h"
 #include "planner.h"
+#ifdef X_CARVE_PRO
+  #include "DRV8711.h"
+#endif
 #include "coolant_control.h"
 #include "eeprom.h"
 #include "gcode.h"

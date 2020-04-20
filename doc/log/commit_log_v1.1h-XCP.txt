@@ -1,6 +1,11 @@
 ----------------
 Date: 2020-04-19
 Author: Quinton Ford
+Subject: Configure stepper motors to use DRV8711 drivers
+
+----------------
+Date: 2020-04-19
+Author: Quinton Ford
 Subject: Configure and enable dual axis
 
 ----------------

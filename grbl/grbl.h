@@ -23,7 +23,7 @@
 
 // Grbl versioning system
 #define GRBL_VERSION "1.1h"
-#define GRBL_VERSION_BUILD "20200419-XCP"
+#define GRBL_VERSION_BUILD "20200420-XCP"
 
 #define X_CARVE_PRO
 

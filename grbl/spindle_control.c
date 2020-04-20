@@ -35,11 +35,16 @@ void spindle_init()
     SPINDLE_PWM_DDR |= (1<<SPINDLE_PWM_BIT); // Configure as PWM output pin.
     SPINDLE_TCCRA_REGISTER = SPINDLE_TCCRA_INIT_MASK; // Configure PWM output compare timer
     SPINDLE_TCCRB_REGISTER = SPINDLE_TCCRB_INIT_MASK;
-    #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
-      SPINDLE_ENABLE_DDR |= (1<<SPINDLE_ENABLE_BIT); // Configure as output pin.
+    #ifdef X_CARVE_PRO
+      SPINDLE_ENABLE_DDR |= (1<<SPINDLE_ENABLE_BIT);
+      SPINDLE_DIRECTION_DDR |= (1<<SPINDLE_DIRECTION_BIT);
     #else
-      #ifndef ENABLE_DUAL_AXIS
-        SPINDLE_DIRECTION_DDR |= (1<<SPINDLE_DIRECTION_BIT); // Configure as output pin.
+      #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
+        SPINDLE_ENABLE_DDR |= (1<<SPINDLE_ENABLE_BIT); // Configure as output pin.
+      #else
+        #ifndef ENABLE_DUAL_AXIS
+          SPINDLE_DIRECTION_DDR |= (1<<SPINDLE_DIRECTION_BIT); // Configure as output pin.
+        #endif
       #endif
     #endif
     pwm_gradient = SPINDLE_PWM_RANGE/(settings.rpm_max-settings.rpm_min);
@@ -66,11 +71,16 @@ uint8_t spindle_get_state()
       #endif
     #else
       if (SPINDLE_TCCRA_REGISTER & (1<<SPINDLE_COMB_BIT)) { // Check if PWM is enabled.
-        #ifdef ENABLE_DUAL_AXIS
-          return(SPINDLE_STATE_CW);
-        #else
+        #ifdef X_CARVE_PRO
           if (SPINDLE_DIRECTION_PORT & (1<<SPINDLE_DIRECTION_BIT)) { return(SPINDLE_STATE_CCW); }
           else { return(SPINDLE_STATE_CW); }
+        #else
+          #ifdef ENABLE_DUAL_AXIS
+            return(SPINDLE_STATE_CW);
+          #else
+            if (SPINDLE_DIRECTION_PORT & (1<<SPINDLE_DIRECTION_BIT)) { return(SPINDLE_STATE_CCW); }
+            else { return(SPINDLE_STATE_CW); }
+          #endif
         #endif
       }
     #endif
@@ -99,11 +109,19 @@ void spindle_stop()
 {
   #ifdef VARIABLE_SPINDLE
     SPINDLE_TCCRA_REGISTER &= ~(1<<SPINDLE_COMB_BIT); // Disable PWM. Output voltage is zero.
-    #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
+    #ifdef X_CARVE_PRO
       #ifdef INVERT_SPINDLE_ENABLE_PIN
-        SPINDLE_ENABLE_PORT |= (1<<SPINDLE_ENABLE_BIT);  // Set pin to high
+        SPINDLE_ENABLE_PORT |= (1<<SPINDLE_ENABLE_BIT);
       #else
-        SPINDLE_ENABLE_PORT &= ~(1<<SPINDLE_ENABLE_BIT); // Set pin to low
+        SPINDLE_ENABLE_PORT &= ~(1<<SPINDLE_ENABLE_BIT);
+      #endif
+    #else
+      #ifdef USE_SPINDLE_DIR_AS_ENABLE_PIN
+        #ifdef INVERT_SPINDLE_ENABLE_PIN
+          SPINDLE_ENABLE_PORT |= (1<<SPINDLE_ENABLE_BIT);  // Set pin to high
+        #else
+          SPINDLE_ENABLE_PORT &= ~(1<<SPINDLE_ENABLE_BIT); // Set pin to low
+        #endif
       #endif
     #endif
   #else
@@ -238,13 +256,21 @@ void spindle_stop()
     spindle_stop();
   
   } else {
-    
-    #if !defined(USE_SPINDLE_DIR_AS_ENABLE_PIN) && !defined(ENABLE_DUAL_AXIS)
+
+    #ifdef X_CARVE_PRO
       if (state == SPINDLE_ENABLE_CW) {
         SPINDLE_DIRECTION_PORT &= ~(1<<SPINDLE_DIRECTION_BIT);
       } else {
         SPINDLE_DIRECTION_PORT |= (1<<SPINDLE_DIRECTION_BIT);
       }
+    #else
+      #if !defined(USE_SPINDLE_DIR_AS_ENABLE_PIN) && !defined(ENABLE_DUAL_AXIS)
+        if (state == SPINDLE_ENABLE_CW) {
+          SPINDLE_DIRECTION_PORT &= ~(1<<SPINDLE_DIRECTION_BIT);
+        } else {
+          SPINDLE_DIRECTION_PORT |= (1<<SPINDLE_DIRECTION_BIT);
+        }
+      #endif
     #endif
   
     #ifdef VARIABLE_SPINDLE
@@ -254,15 +280,23 @@ void spindle_stop()
       }
       spindle_set_speed(spindle_compute_pwm_value(rpm));
     #endif
-    #if (defined(USE_SPINDLE_DIR_AS_ENABLE_PIN) && \
-        !defined(SPINDLE_ENABLE_OFF_WITH_ZERO_SPEED)) || !defined(VARIABLE_SPINDLE)
-      // NOTE: Without variable spindle, the enable bit should just turn on or off, regardless
-      // if the spindle speed value is zero, as its ignored anyhow.
+    #ifdef X_CARVE_PRO
       #ifdef INVERT_SPINDLE_ENABLE_PIN
         SPINDLE_ENABLE_PORT &= ~(1<<SPINDLE_ENABLE_BIT);
       #else
         SPINDLE_ENABLE_PORT |= (1<<SPINDLE_ENABLE_BIT);
-      #endif    
+      #endif
+    #else
+      #if (defined(USE_SPINDLE_DIR_AS_ENABLE_PIN) && \
+          !defined(SPINDLE_ENABLE_OFF_WITH_ZERO_SPEED)) || !defined(VARIABLE_SPINDLE)
+        // NOTE: Without variable spindle, the enable bit should just turn on or off, regardless
+        // if the spindle speed value is zero, as its ignored anyhow.
+        #ifdef INVERT_SPINDLE_ENABLE_PIN
+          SPINDLE_ENABLE_PORT &= ~(1<<SPINDLE_ENABLE_BIT);
+        #else
+          SPINDLE_ENABLE_PORT |= (1<<SPINDLE_ENABLE_BIT);
+        #endif    
+      #endif
     #endif
   
   }

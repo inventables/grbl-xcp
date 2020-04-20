@@ -45,10 +45,15 @@ uint8_t system_control_get_state()
     pin ^= INVERT_CONTROL_PIN_MASK;
   #endif
   if (pin) {
-    #ifdef ENABLE_SAFETY_DOOR_INPUT_PIN
+    #ifdef X_CARVE_PRO
       if (bit_istrue(pin,(1<<CONTROL_SAFETY_DOOR_BIT))) { control_state |= CONTROL_PIN_INDEX_SAFETY_DOOR; }
-    #else
       if (bit_istrue(pin,(1<<CONTROL_FEED_HOLD_BIT))) { control_state |= CONTROL_PIN_INDEX_FEED_HOLD; }
+    #else
+      #ifdef ENABLE_SAFETY_DOOR_INPUT_PIN
+        if (bit_istrue(pin,(1<<CONTROL_SAFETY_DOOR_BIT))) { control_state |= CONTROL_PIN_INDEX_SAFETY_DOOR; }
+      #else
+        if (bit_istrue(pin,(1<<CONTROL_FEED_HOLD_BIT))) { control_state |= CONTROL_PIN_INDEX_FEED_HOLD; }
+      #endif
     #endif
     if (bit_istrue(pin,(1<<CONTROL_RESET_BIT))) { control_state |= CONTROL_PIN_INDEX_RESET; }
     if (bit_istrue(pin,(1<<CONTROL_CYCLE_START_BIT))) { control_state |= CONTROL_PIN_INDEX_CYCLE_START; }
@@ -71,14 +76,21 @@ ISR(CONTROL_INT_vect)
     if (bit_istrue(pin,CONTROL_PIN_INDEX_CYCLE_START)) {
       bit_true(sys_rt_exec_state, EXEC_CYCLE_START);
     }
-    #ifndef ENABLE_SAFETY_DOOR_INPUT_PIN
+    #ifdef X_CARVE_PRO
       if (bit_istrue(pin,CONTROL_PIN_INDEX_FEED_HOLD)) {
-        bit_true(sys_rt_exec_state, EXEC_FEED_HOLD);
-    #else
+        bit_true(sys_rt_exec_state, EXEC_FEED_HOLD); }
       if (bit_istrue(pin,CONTROL_PIN_INDEX_SAFETY_DOOR)) {
-        bit_true(sys_rt_exec_state, EXEC_SAFETY_DOOR);
+        bit_true(sys_rt_exec_state, EXEC_SAFETY_DOOR); }
+    #else
+      #ifndef ENABLE_SAFETY_DOOR_INPUT_PIN
+        if (bit_istrue(pin,CONTROL_PIN_INDEX_FEED_HOLD)) {
+          bit_true(sys_rt_exec_state, EXEC_FEED_HOLD);
+      #else
+        if (bit_istrue(pin,CONTROL_PIN_INDEX_SAFETY_DOOR)) {
+          bit_true(sys_rt_exec_state, EXEC_SAFETY_DOOR);
+      #endif
+      }
     #endif
-    }
   }
 }
 
@@ -86,10 +98,14 @@ ISR(CONTROL_INT_vect)
 // Returns if safety door is ajar(T) or closed(F), based on pin state.
 uint8_t system_check_safety_door_ajar()
 {
-  #ifdef ENABLE_SAFETY_DOOR_INPUT_PIN
+  #ifdef X_CARVE_PRO
     return(system_control_get_state() & CONTROL_PIN_INDEX_SAFETY_DOOR);
   #else
-    return(false); // Input pin not enabled, so just return that it's closed.
+    #ifdef ENABLE_SAFETY_DOOR_INPUT_PIN
+      return(system_control_get_state() & CONTROL_PIN_INDEX_SAFETY_DOOR);
+    #else
+      return(false); // Input pin not enabled, so just return that it's closed.
+    #endif
   #endif
 }
 

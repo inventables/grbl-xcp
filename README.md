@@ -4,11 +4,19 @@
 
 ## Prerequisites
 
+### macOS
+
 * Install the [Arduino IDE](https://www.arduino.cc/en/Main/Software).
+  - Can also be installed via `brew cask install arduino`
 * Add the embedded AVR toolchain to your path
-  - On macOS it's `/Applications/Arduino.app/Contents/Java/hardware/tools/avr/bin`
+  - `export PATH=$PATH:/Applications/Arduino.app/Contents/Java/hardware/tools/avr/bin`
 
 **TODO** Investigate [arduino-cli](https://github.com/arduino/arduino-cli) as simpler alternative
+
+### Linux (Debian)
+
+* Install the AVR toolchain packages
+  - `apt install -y gcc-avr binutils-avr avr-libc`
 
 ## Compiling
 

@@ -1,4 +1,11 @@
 ----------------
+Date: 2020-06-21
+Author: Quinton Ford
+Subject: Correct firmware during hardware debug
+    - Comment INVERT_SPINDLE_ENABLE_PIN out from config.h
+    - Change the index of control pin signals in CONTROL_MASK to align with port pin numbers, not index of pins within PCINT vector
+
+----------------
 Date: 2020-04-20
 Author: Quinton Ford
 Subject: Enable simultaneous feed hold and safety door inputs

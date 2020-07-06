@@ -383,13 +383,13 @@
   #define DEFAULT_Z_STEPS_PER_MM (MICROSTEPS_Z*STEP_REVS_Z/MM_PER_REV_Z)
   #define DEFAULT_X_MAX_RATE 7620.0 // mm/min
   #define DEFAULT_Y_MAX_RATE 7620.0 // mm/min
-  #define DEFAULT_Z_MAX_RATE 500.0 // mm/min
+  #define DEFAULT_Z_MAX_RATE 2540.0 // mm/min
   #define DEFAULT_X_ACCELERATION (500.0*60*60) // 25*60*60 mm/min^2 = 25 mm/sec^2
-  #define DEFAULT_Y_ACCELERATION (500.0*60*60) // 25*60*60 mm/min^2 = 25 mm/sec^2
-  #define DEFAULT_Z_ACCELERATION (50.0*60*60) // 25*60*60 mm/min^2 = 25 mm/sec^2
+  #define DEFAULT_Y_ACCELERATION (350.0*60*60) // 25*60*60 mm/min^2 = 25 mm/sec^2
+  #define DEFAULT_Z_ACCELERATION (500.0*60*60) // 25*60*60 mm/min^2 = 25 mm/sec^2
   #define DEFAULT_X_MAX_TRAVEL 1219.2 // mm NOTE: Must be a positive value.
   #define DEFAULT_Y_MAX_TRAVEL 1219.2 // mm NOTE: Must be a positive value.
-  #define DEFAULT_Z_MAX_TRAVEL 100.0 // mm NOTE: Must be a positive value.
+  #define DEFAULT_Z_MAX_TRAVEL 130.0 // mm NOTE: Must be a positive value.
   #define DEFAULT_SPINDLE_RPM_MAX 24000.0 // rpm
   #define DEFAULT_SPINDLE_RPM_MIN 0.0 // rpm
   #define DEFAULT_STEP_PULSE_MICROSECONDS 10
@@ -411,7 +411,7 @@
   #define DEFAULT_HOMING_FEED_RATE 25.0 // mm/min
   #define DEFAULT_HOMING_SEEK_RATE 750.0 // mm/min
   #define DEFAULT_HOMING_DEBOUNCE_DELAY 250 // msec (0-65k)
-  #define DEFAULT_HOMING_PULLOFF 1.0 // mm
+  #define DEFAULT_HOMING_PULLOFF 2.0 // mm
 #endif
 
 #ifdef DEFAULTS_BOBSCNC_E3

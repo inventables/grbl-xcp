@@ -1,4 +1,10 @@
 ----------------
+Date: 2020-07-06
+Author: Quinton Ford
+Subject: Update default values
+    - Change max rate for Z-axis, acceleration for Y-axis and Z-axis, max travel for Z-axis, and homing pulloff distance
+
+----------------
 Date: 2020-06-21
 Author: Quinton Ford
 Subject: Correct firmware during hardware debug

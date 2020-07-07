@@ -22,8 +22,8 @@
 #define grbl_h
 
 // Grbl versioning system
-#define GRBL_VERSION "1.1h-Prototype Firmware"
-#define GRBL_VERSION_BUILD "20200420-XCP"
+#define GRBL_VERSION "1.1h - XCP Proto 1.0.0"
+#define GRBL_VERSION_BUILD "20200707"
 
 #define X_CARVE_PRO
 

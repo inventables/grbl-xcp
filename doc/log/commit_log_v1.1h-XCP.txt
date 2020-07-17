@@ -1,4 +1,17 @@
 ----------------
+Date: 2020-07-06
+Author: Quinton Ford
+Subject: Update default values
+    - Change max rate for Z-axis, acceleration for Y-axis and Z-axis, max travel for Z-axis, and homing pulloff distance
+
+----------------
+Date: 2020-06-21
+Author: Quinton Ford
+Subject: Correct firmware during hardware debug
+    - Comment INVERT_SPINDLE_ENABLE_PIN out from config.h
+    - Change the index of control pin signals in CONTROL_MASK to align with port pin numbers, not index of pins within PCINT vector
+
+----------------
 Date: 2020-04-20
 Author: Quinton Ford
 Subject: Enable simultaneous feed hold and safety door inputs

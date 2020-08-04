@@ -24,7 +24,8 @@ Run `make` from the root of the repo. This produces a `grbl.hex` firmware file t
 
 ## Flashing
 
-**TODO** Need a board to properly test this.
+See the same doc as above on the [Grbl wiki](https://github.com/gnea/grbl/wiki/Compiling-Grbl#via-the-arduino-ide-all-platforms-recommended-for-all-users)
+for both flashing an compiling instructions.
 
 ## Differences
 

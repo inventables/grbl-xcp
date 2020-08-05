@@ -32,7 +32,7 @@ for both flashing an compiling instructions.
 There are automated builds setup on CircleCI for this repo. Currently they are run on PR requests and when changes are merged to master. Upon success, the firmware binary (named `grbl.hex`) is uploaded as a CircleCI artifact. Here's an [example of the artifacts tab](https://app.circleci.com/pipelines/github/inventables/grbl-xcp/14/workflows/925d508a-5c7a-4c85-98ef-4215e30a4f6f/jobs/15/artifacts) from a `master` branch build
 
 When preparing a release, we want to use this firmware binary (from the `master` branch build) for handing off to manufacturing. That means properly updating
-the [build strings](https://github.com/inventables/grbl-xcp/blob/master/grbl/grbl.h#L26) and then creating a git tag of the same name. That tag should be the basis for a [GitHub release](https://github.com/inventables/grbl-xcp/releases/new) which includes the aforementioned hex file.
+the [build strings](https://github.com/inventables/grbl-xcp/blob/master/grbl/grbl.h#L26) and then creating a git tag of the same name. That tag should be the basis for a [GitHub release](https://github.com/inventables/grbl-xcp/releases) which includes the aforementioned hex file. See the [initial release](https://github.com/inventables/grbl-xcp/releases/tag/v1.1h-XCP.20200804) for an example.
 
 TBD: Email one (or all?) of Andrew, Sumanth, Stephanie with the firmware binary
 

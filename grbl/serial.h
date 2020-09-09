@@ -27,10 +27,15 @@
   #define RX_BUFFER_SIZE 128
 #endif
 #ifndef TX_BUFFER_SIZE
-  #ifdef USE_LINE_NUMBERS
-    #define TX_BUFFER_SIZE 112
+  #ifdef REPORT_ECHO_LINE_RECEIVED
+    // Thankfully on the Mega we have a lot more space
+    #define TX_BUFFER_SIZE 1024
   #else
-    #define TX_BUFFER_SIZE 104
+    #ifdef USE_LINE_NUMBERS
+      #define TX_BUFFER_SIZE 112
+    #else
+      #define TX_BUFFER_SIZE 104
+    #endif
   #endif
 #endif
 

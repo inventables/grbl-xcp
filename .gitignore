@@ -4,4 +4,4 @@
 *.DS_Store
 *.d
 
-README.md
+!bootloader/*.hex

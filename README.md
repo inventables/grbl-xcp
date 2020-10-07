@@ -34,8 +34,6 @@ There are automated builds setup on CircleCI for this repo. Currently they are r
 When preparing a release, we want to use this firmware binary (from the `master` branch build) for handing off to manufacturing. That means properly updating
 the [build strings](https://github.com/inventables/grbl-xcp/blob/master/grbl/grbl.h#L26) and then creating a git tag of the same name. That tag should be the basis for a [GitHub release](https://github.com/inventables/grbl-xcp/releases) which includes the aforementioned hex file. See the [initial release](https://github.com/inventables/grbl-xcp/releases/tag/v1.1h-XCP.20200804) for an example.
 
-TBD: Email one (or all?) of Andrew, Sumanth, Stephanie with the firmware binary
-
 ## Differences
 
 **TODO**

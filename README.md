@@ -33,6 +33,8 @@ for both flashing (`grbl.hex`) and compiling instructions.
 
 Flashing the `grbl.bootloader.hex` is more invovled as you need to setup an ISP to erase and write the full program memory. One relatively easy approach is to use another [Arduino as an ISP](https://www.arduino.cc/en/Tutorial/BuiltInExamples/ArduinoISP) but this does require a small bit of wiring and uploading an custom ISP program to said Arduino.
 
+There's also `flash-grbl.sh` and `flash-combined.sh` that wrap the appropriate `avrdude` command for the respective hex file.
+
 ## Releases
 
 There are automated builds setup on CircleCI for this repo. Currently they are run on PR requests and when changes are merged to master. Upon success, the firmware binaries (`grbl.hex` and `grbl.bootloader.hex`) are uploaded as a CircleCI artifact. Here's an [example of the artifacts tab](https://app.circleci.com/pipelines/github/inventables/grbl-xcp/14/workflows/925d508a-5c7a-4c85-98ef-4215e30a4f6f/jobs/15/artifacts) from a `master` branch build

@@ -7,10 +7,12 @@ jobs:
     steps:
       - checkout
       - run: sudo apt update --fix-missing
-      - run: sudo apt install -y gcc-avr binutils-avr avr-libc
-      - run: make
+      - run: sudo apt install -y gcc-avr binutils-avr avr-libc srecord
+      - run: make grbl.bootloader.hex
       - store_artifacts:
           path: grbl.hex
+      - store_artifacts:
+          path: grbl.bootloader.hex
 
 workflows:
   version: 2

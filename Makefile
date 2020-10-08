@@ -95,6 +95,9 @@ grbl.hex: $(BUILDDIR)/main.elf
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
 
+grbl.bootloader.hex: grbl.hex bootloader/stk500boot_v2_mega2560.hex
+	srec_cat -Output grbl.bootloader.hex -Intel grbl.hex -Intel bootloader/stk500boot_v2_mega2560.hex -Intel
+
 # Targets for code debugging and analysis:
 disasm:	main.elf
 	avr-objdump -d $(BUILDDIR)/main.elf

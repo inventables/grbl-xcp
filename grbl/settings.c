@@ -177,10 +177,23 @@ uint8_t settings_read_coord_data(uint8_t coord_select, float *coord_data)
 uint8_t read_global_settings() {
   // Check version-byte of eeprom
   uint8_t version = eeprom_get_char(0);
-  if (version == SETTINGS_VERSION) {
+  if (version >= 10) {
     // Read settings-record and check checksum
     if (!(memcpy_from_eeprom_with_checksum((char*)&settings, EEPROM_ADDR_GLOBAL, sizeof(settings_t)))) {
       return(false);
+    }
+    // Migration from 10 => 11 added system echo flag
+    switch (version) {
+      case SETTINGS_VERSION:
+        break;
+      case 10:
+        // Earlier versions of the status mask would write unused bits that have
+        // been re-purposed to store additional flags.
+        settings.status_report_mask &= BITFLAG_RT_STATUS_MASK;
+        write_global_settings();
+        break;
+      default:
+        return(false);
     }
   } else {
     return(false);
@@ -253,7 +266,7 @@ uint8_t settings_store_global_setting(uint8_t parameter, float value) {
         else { settings.flags &= ~BITFLAG_INVERT_PROBE_PIN; }
         probe_configure_invert_mask(false);
         break;
-      case 10: settings.status_report_mask = int_value; break;
+      case 10: settings.status_report_mask = int_value&BITFLAG_RT_STATUS_MASK; break;
       case 11: settings.junction_deviation = value; break;
       case 12: settings.arc_tolerance = value; break;
       case 13:
@@ -293,6 +306,10 @@ uint8_t settings_store_global_setting(uint8_t parameter, float value) {
         #else
           return(STATUS_SETTING_DISABLED_LASER);
         #endif
+        break;
+      case 40:
+        if (int_value) { settings.status_report_mask |= BITFLAG_REPORT_ECHO_LINE; }
+        else { settings.status_report_mask &= ~BITFLAG_REPORT_ECHO_LINE; }
         break;
       default:
         return(STATUS_INVALID_STATEMENT);

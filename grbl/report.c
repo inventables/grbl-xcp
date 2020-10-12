@@ -189,7 +189,7 @@ void report_grbl_settings() {
   report_util_uint8_setting(4,bit_istrue(settings.flags,BITFLAG_INVERT_ST_ENABLE));
   report_util_uint8_setting(5,bit_istrue(settings.flags,BITFLAG_INVERT_LIMIT_PINS));
   report_util_uint8_setting(6,bit_istrue(settings.flags,BITFLAG_INVERT_PROBE_PIN));
-  report_util_uint8_setting(10,settings.status_report_mask);
+  report_util_uint8_setting(10,settings.status_report_mask&BITFLAG_RT_STATUS_MASK);
   report_util_float_setting(11,settings.junction_deviation,N_DECIMAL_SETTINGVALUE);
   report_util_float_setting(12,settings.arc_tolerance,N_DECIMAL_SETTINGVALUE);
   report_util_uint8_setting(13,bit_istrue(settings.flags,BITFLAG_REPORT_INCHES));
@@ -208,6 +208,8 @@ void report_grbl_settings() {
   #else
     report_util_uint8_setting(32,0);
   #endif
+  report_util_uint8_setting(40,bit_istrue(settings.status_report_mask,BITFLAG_REPORT_ECHO_LINE));
+
   // Print axis settings
   uint8_t idx, set_idx;
   uint8_t val = AXIS_SETTINGS_START_VAL;

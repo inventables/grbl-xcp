@@ -27,7 +27,7 @@
 
 // Version of the EEPROM data. Will be used to migrate existing data from older versions of Grbl
 // when firmware is upgraded. Always stored in byte 0 of eeprom
-#define SETTINGS_VERSION 10  // NOTE: Check settings_reset() when moving to next version.
+#define SETTINGS_VERSION 11  // NOTE: Check settings_reset() when moving to next version.
 
 // Define bit flag masks for the boolean settings in settings.flag.
 #define BIT_REPORT_INCHES      0
@@ -51,6 +51,15 @@
 // Define status reporting boolean enable bit flags in settings.status_report_mask
 #define BITFLAG_RT_STATUS_POSITION_TYPE     bit(0)
 #define BITFLAG_RT_STATUS_BUFFER_STATE      bit(1)
+#define BITFLAG_RT_STATUS_MASK              (BITFLAG_RT_STATUS_POSITION_TYPE|BITFLAG_RT_STATUS_BUFFER_STATE)
+// With this enabled, Grbl sends back an echo of the line it has received, which has been pre-parsed (spaces
+// removed, capitalized letters, no comments) and is to be immediately executed by Grbl. Echoes will not be
+// sent upon a line buffer overflow, but should for all normal lines sent to Grbl. For example, if a user
+// sends the line 'g1 x1.032 y2.45 (test comment)', Grbl will echo back in the form '[echo: G1X1.032Y2.45]'.
+// NOTE: Only use this for debugging purposes!! When echoing, this takes up valuable resources and can effect
+// performance. If absolutely needed for normal operation, the serial write buffer should be greatly increased
+// to help minimize transmission waiting within the serial write protocol.
+#define BITFLAG_REPORT_ECHO_LINE            bit(7)
 
 // Define settings restore bitflags.
 #define SETTINGS_RESTORE_DEFAULTS bit(0)
@@ -96,7 +105,9 @@ typedef struct {
   uint8_t step_invert_mask;
   uint8_t dir_invert_mask;
   uint8_t stepper_idle_lock_time; // If max value 255, steppers do not disable.
+
   uint8_t status_report_mask; // Mask to indicate desired report data.
+
   float junction_deviation;
   float arc_tolerance;
 

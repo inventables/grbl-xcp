@@ -27,8 +27,8 @@
   #define RX_BUFFER_SIZE 128
 #endif
 #ifndef TX_BUFFER_SIZE
-  #ifdef REPORT_ECHO_LINE_RECEIVED
-    // Thankfully on the Mega we have a lot more space
+  #ifdef X_CARVE_PRO
+    // Targets an ATMega2560 so has sufficient space
     #define TX_BUFFER_SIZE 1024
   #else
     #ifdef USE_LINE_NUMBERS

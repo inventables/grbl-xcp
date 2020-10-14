@@ -27,10 +27,15 @@
   #define RX_BUFFER_SIZE 128
 #endif
 #ifndef TX_BUFFER_SIZE
-  #ifdef USE_LINE_NUMBERS
-    #define TX_BUFFER_SIZE 112
+  #ifdef X_CARVE_PRO
+    // Targets an ATMega2560 so has sufficient space
+    #define TX_BUFFER_SIZE 1024
   #else
-    #define TX_BUFFER_SIZE 104
+    #ifdef USE_LINE_NUMBERS
+      #define TX_BUFFER_SIZE 112
+    #else
+      #define TX_BUFFER_SIZE 104
+    #endif
   #endif
 #endif
 

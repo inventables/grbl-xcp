@@ -82,9 +82,9 @@ void protocol_main_loop()
         if (sys.abort) { return; } // Bail to calling function upon system abort
 
         line[char_counter] = 0; // Set string termination character.
-        #ifdef REPORT_ECHO_LINE_RECEIVED
+        if (bit_istrue(settings.status_report_mask,BITFLAG_REPORT_ECHO_LINE)) {
           report_echo_line_received(line);
-        #endif
+        }
 
         // Direct and execute one line of formatted input, and report status of execution.
         if (line_flags & LINE_FLAG_OVERFLOW) {

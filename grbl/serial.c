@@ -182,6 +182,7 @@ ISR(SERIAL_RX)
           #ifdef ENABLE_M7
             case CMD_COOLANT_MIST_OVR_TOGGLE: system_set_exec_accessory_override_flag(EXEC_COOLANT_MIST_OVR_TOGGLE); break;
           #endif
+          default: report_rt_invalid = 1; break;
         }
         // Throw away any unfound extended-ASCII character by not passing it to the serial buffer.
       } else { // Write character to buffer
@@ -192,6 +193,8 @@ ISR(SERIAL_RX)
         if (next_head != serial_rx_buffer_tail) {
           serial_rx_buffer[serial_rx_buffer_head] = data;
           serial_rx_buffer_head = next_head;
+        } else {
+          report_rx_overflow = 1;
         }
       }
   }

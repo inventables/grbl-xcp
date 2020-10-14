@@ -651,6 +651,20 @@ void report_realtime_status()
     }
   #endif
 
+  // TODO Integrate as debug flags that can be enabled?
+  uint8_t rxo = report_rx_overflow;
+  uint8_t rti = report_rt_invalid;
+  if (rxo > 0) {
+    printPgmString(PSTR("|Rxo:"));
+    print_uint8_base10(rxo);
+    report_rx_overflow = 0;
+  }
+  if (rti > 0) {
+    printPgmString(PSTR("|Rti:"));
+    print_uint8_base10(rti);
+    report_rt_invalid = 0;
+  }
+
   serial_write('>');
   report_util_line_feed();
 }

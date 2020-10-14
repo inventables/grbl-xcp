@@ -34,6 +34,8 @@ volatile uint8_t sys_rt_exec_accessory_override; // Global realtime executor bit
 #ifdef DEBUG
   volatile uint8_t sys_rt_exec_debug;
 #endif
+volatile uint8_t report_rx_overflow;  // Count of times the serial RX buffer runs out of space.
+volatile uint8_t report_rt_invalid;   // Count of times received invalid real-time commands.
 
 
 int main(void)

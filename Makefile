@@ -92,14 +92,15 @@ grbl.hex: $(BUILDDIR)/main.elf
 	rm -f grbl.hex
 	avr-objcopy -j .text -j .data -O ihex $(BUILDDIR)/main.elf grbl.hex
 	avr-size --format=berkeley $(BUILDDIR)/main.elf
+
+grbl.bootloader.hex: $(BUILDDIR)/main.elf grbl.hex bootloader/stk500boot_v2_mega2560.hex
+	./bootloader/combine.sh $^ $@
+
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.
 
-grbl.bootloader.hex: grbl.hex bootloader/stk500boot_v2_mega2560.hex
-	srec_cat -Output grbl.bootloader.hex -Intel grbl.hex -Intel bootloader/stk500boot_v2_mega2560.hex -Intel
-
 # Targets for code debugging and analysis:
-disasm:	main.elf
+disasm:	$(BUILDDIR)/main.elf
 	avr-objdump -d $(BUILDDIR)/main.elf
 
 cpp:

@@ -368,10 +368,12 @@ void report_execute_startup_message(char *line, uint8_t status_code)
   report_status_message(status_code);
 }
 
+static const char build_info_ver[] PROGMEM = "[VER:" GRBL_VERSION "." GRBL_VERSION_BUILD ":";
+
 // Prints build info line
 void report_build_info(char *line)
 {
-  printPgmString(PSTR("[VER:" GRBL_VERSION "." GRBL_VERSION_BUILD ":"));
+  printPgmString(&build_info_ver[0]);
   printString(line);
   report_util_feedback_line_feed();
   printPgmString(PSTR("[OPT:")); // Generate compile-time build option list

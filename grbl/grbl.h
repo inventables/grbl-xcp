@@ -22,7 +22,7 @@
 #define grbl_h
 
 // Grbl versioning system
-#define GRBL_VERSION "1.1h-XCP.20220314a"
+#define GRBL_VERSION "1.1h-XCPd.20220610a"
 
 #define X_CARVE_PRO
 

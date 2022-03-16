@@ -368,7 +368,7 @@ void report_execute_startup_message(char *line, uint8_t status_code)
   report_status_message(status_code);
 }
 
-static const char build_info_ver[] PROGMEM = "[VER:" GRBL_VERSION "." GRBL_VERSION_BUILD ":";
+static const char build_info_ver[] PROGMEM = "[VER:" GRBL_VERSION ":";
 
 // Prints build info line
 void report_build_info(char *line)

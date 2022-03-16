@@ -8,7 +8,7 @@ BOOT=$3
 OUT=$4
 
 # Creates a combined bootloader, tweaking the version identifer. The last
-# byte of the GRBL_VERSION_BUILD macro is tweaked to differentiate hex
+# byte of the GRBL_VERSION macro is tweaked to differentiate hex
 # files with and w/out a bootloader based on the `$I` output.
 #
 # Lookup the address of the `build_info_ver` symbol
@@ -19,7 +19,7 @@ OUT=$4
 # With the address (column 1) and size (column 5) we can find the target
 # byte of our string which is formatted as such:
 #
-#   build_info_ver = "[VER:" GRBL_VERSION "." GRBL_VERSION_BUILD ":"
+#   build_info_ver = "[VER:" GRBL_VERSION
 #
 # The `base+len-3` skips the implied null terminator and final colon
 #

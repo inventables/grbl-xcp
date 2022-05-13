@@ -1,6 +1,6 @@
 #!/bin/sh
 
-HEX_FILE=grbl.bootloader.hex
+HEX_FILE=XCPgrblUpload.ino.with_bootloader.mega.hex
 PORT=$(ls /dev/cu.usb*) # This is just a heuristic
 
 ARDUINO_TOOLS=/Applications/Arduino.app/Contents/Java/hardware/tools/avr
@@ -14,4 +14,3 @@ ${ARDUINO_TOOLS}/bin/avrdude -v \
  -P ${PORT} \
  -b 19200 \
  -U flash:w:${HEX_FILE}:i
-

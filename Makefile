@@ -46,7 +46,7 @@ AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE) -B 10 -F
 # Compile flags for avr-gcc v4.8.1. Does not produce -flto warnings.
 # COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -I. -ffunction-sections
 
-# Compile flags for avr-gcc v4.9.2 compatible with the IDE. Or if you don't care about the warnings. 
+# Compile flags for avr-gcc v4.9.2 compatible with the IDE. Or if you don't care about the warnings.
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) -I. -ffunction-sections -flto
 
 
@@ -93,8 +93,8 @@ grbl.hex: $(BUILDDIR)/main.elf
 	avr-objcopy -j .text -j .data -O ihex $(BUILDDIR)/main.elf grbl.hex
 	avr-size --format=berkeley $(BUILDDIR)/main.elf
 
-grbl.bootloader.hex: $(BUILDDIR)/main.elf grbl.hex bootloader/stk500boot_v2_mega2560.hex
-	./bootloader/combine.sh $^ $@
+XCPgrblUpload.ino.with_bootloader.mega.hex: grbl.hex bootloader/stk500boot_v2_mega2560.hex
+	srec_cat -Output $@ -Intel grbl.hex -Intel bootloader/stk500boot_v2_mega2560.hex -Intel
 
 # If you have an EEPROM section, you must also create a hex file for the
 # EEPROM and add it to the "flash" target.

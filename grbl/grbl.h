@@ -22,8 +22,6 @@
 #define grbl_h
 
 // Grbl versioning system
-// The `a` suffix is flipped to `b` for the combined bootloader build
-// See also https://github.com/inventables/grbl-xcp/pull/8
 #define GRBL_VERSION "1.1h-XCP.20220314a"
 
 #define X_CARVE_PRO

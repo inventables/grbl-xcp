@@ -12,6 +12,5 @@ ${ARDUINO_TOOLS}/bin/avrdude -v \
  -p atmega2560 \
  -c wiring -D \
  -P ${PORT} \
- -b 115200 \
  -U flash:w:${HEX_FILE}:i
 
